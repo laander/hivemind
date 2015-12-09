@@ -1,0 +1,19 @@
+{
+  "name": "hivemind",
+  "version": "1.0.0",
+  "description": "A hivemind of humans",
+  "main": "main.js",
+  "dependencies": {
+    "chance": "^0.8.0",
+    "machina": "^1.1.2",
+    "moment": "^2.10.6"
+  },
+  "devDependencies": {
+    "standard": "^5.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lasse Boisen Andesen <la@timekit.io> (http://timekit.io)",
+  "license": "MIT"
+}
