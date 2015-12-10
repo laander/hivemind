@@ -40,14 +40,12 @@ function seniority (value, age) {
 
 export function grow (props) {
   props.age = props.age + (modifier / constants.ageModifier)
-  let change = (10 / seniority(noise(), props.age)) * modifier / 1000
-  props.weight = props.weight + change
+  if (props.age > 0.1) props.weight = props.weight + ((10 / seniority(noise(), props.age)) * modifier / 1000)
   return props
 }
 
 export function fatality (props) {
-  let chance = (props.age * modifier) / 10000
-  chance = seniority(chance, props.age)
+  let chance = seniority(((props.age * modifier) / 10000), props.age)
   return rand.bool({likelihood: (chance < 99 ? chance : 99)})
 }
 

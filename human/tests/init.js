@@ -10,14 +10,14 @@ describe('human', () => {
     let human = new Human()
     expect(human).toBeDefined()
     expect(human.properties).toBeDefined()
-    expect(human.heartbeat).toBeDefined()
+    expect(human.cycle).toBeDefined()
     expect(human.state).toBe('embryo')
   })
   it('must init with properties', () => {
     let human = new Human(testProperties)
     expect(human).toBeDefined()
     expect(human.properties).toBeDefined()
-    expect(human.heartbeat).toBeDefined()
+    expect(human.cycle).toBeDefined()
     expect(human.state).toBe('idle')
   })
   it('must init, freeze and unfreeze', () => {

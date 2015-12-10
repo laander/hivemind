@@ -9,6 +9,7 @@
     "moment": "^2.10.6"
   },
   "devDependencies": {
+    "babel-eslint": "^5.0.0-beta6",
     "jasmine": "^2.4.1",
     "standard": "^5.4.1"
   },
@@ -17,7 +18,11 @@
     "start": "node main.js"
   },
   "standard": {
-    "globals": [ "describe", "it", "expect" ],
+    "globals": [
+      "describe",
+      "it",
+      "expect"
+    ],
     "parser": "babel-eslint"
   },
   "author": "Lasse Boisen Andesen <la@timekit.io> (http://timekit.io)",

@@ -30,19 +30,19 @@ class Human {
 
   // lifecycle loops
 
-  heartbeatStart (action) {
-    this.heartbeatStop()
-    this.heartbeat = setInterval(() => {
+  cycleStart (action) {
+    this.cycleStop()
+    this.cycle = setInterval(() => {
       action()
-      this.bioLoop()
+      this.heartbeat()
     }, constants.cycleTime)
   }
 
-  heartbeatStop () {
-    clearInterval(this.heartbeat)
+  cycleStop () {
+    clearInterval(this.cycle)
   }
 
-  bioLoop () {
+  heartbeat () {
     this.properties = actions.grow(this.properties)
     if (actions.fatality(this.properties)) {
       this.machine.die()
