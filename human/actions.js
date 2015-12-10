@@ -8,7 +8,10 @@ import * as constants from './constants'
 // utilities
 
 let rand = new Chance()
-let mod = () => {
+let cyclesPerSecond = constants.cycleTime / 1000
+let modifier = cyclesPerSecond * constants.actionModifier
+
+let noise = () => {
   return rand.floating({min: 0, max: 1})
 }
 
@@ -18,37 +21,33 @@ function normalize (value) {
 }
 
 function add (value, multi = 1) {
-  return normalize(value + (mod() * multi * constants.cycleTime / constants.actionModifier))
+  return normalize(value + (noise() * multi * modifier))
 }
 
 function sub (value, multi = 1) {
-  return normalize(value - (mod() * multi * constants.cycleTime / constants.actionModifier))
+  return normalize(value - (noise() * multi * modifier))
 }
 
-function weight (props) {
-  let change = (rand.bool() ? 1 : -1)
-  if (props.age > 0.1 && props.age < 20) {
-    props.weight = props.weight + ((change + mod()) * constants.cycleTime / constants.actionModifier / constants.ageModifier * 2)
-  }
-  if (props.age >= 20 && props.age <= 50) {
-    props.weight = props.weight + ((change + mod()) * constants.cycleTime / constants.actionModifier / constants.ageModifier)
-  }
-  if (props.age >= 50 && props.age <= 80) {
-    props.weight = props.weight + ((change + mod()) * constants.cycleTime / constants.actionModifier / constants.ageModifier * 0.5)
-  }
-  return props
+function seniority (value, age) {
+  if (age < 20) return value * 0.5
+  if (age >= 20 && age <= 50) return value * 1
+  if (age >= 50 && age <= 80) return value * 4
+  if (age >= 80 && age <= 100) return value * 8
+  if (age >= 100) return value * 12
 }
 
 // actions
 
 export function grow (props) {
-  props.age = props.age + (constants.cycleTime / constants.actionModifier / constants.ageModifier)
-  props = weight(props)
+  props.age = props.age + (modifier / constants.ageModifier)
+  let change = (10 / seniority(noise(), props.age)) * modifier / 1000
+  props.weight = props.weight + change
   return props
 }
 
 export function fatality (props) {
-  let chance = props.age / constants.cycleTime / constants.actionModifier * 10
+  let chance = (props.age * modifier) / 10000
+  chance = seniority(chance, props.age)
   return rand.bool({likelihood: (chance < 99 ? chance : 99)})
 }
 
