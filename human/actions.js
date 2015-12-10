@@ -59,7 +59,7 @@ export function idle (props) {
 }
 
 export function eat (props) {
-  props.hunger = sub(props.hunger, 2)
+  props.hunger = sub(props.hunger, 3)
   props.weight = add(props.weight, 0.5)
   props.bowel = add(props.bowel, 2)
   props.tired = add(props.tired, 0.5)
@@ -68,13 +68,13 @@ export function eat (props) {
 }
 
 export function sleep (props) {
-  props.tired = sub(props.tired, 3)
+  props.tired = sub(props.tired, 2)
   props.energy = add(props.energy, 2)
   return props
 }
 
 export function defecate (props) {
-  props.bowel = sub(props.bowel, 2)
+  props.bowel = sub(props.bowel, 4)
   return props
 }
 

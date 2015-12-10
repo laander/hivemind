@@ -30,6 +30,9 @@ let states = {
         if (props.hunger > 90) {
           this.eat()
         }
+        if (props.bowel > 90) {
+          this.defecate()
+        }
         if (props.tired > 90) {
           this.sleep()
         }
@@ -61,6 +64,18 @@ let states = {
         let props = this.human.properties
         props = acts.eat(props)
         if (props.hunger < 5) {
+          this.idle()
+        }
+      })
+    }
+  },
+  defecating: {
+    _onEnter: function () {
+      utils.log('state: defecating')
+      this.human.heartbeatStart(() => {
+        let props = this.human.properties
+        props = acts.defecate(props)
+        if (props.bowel < 5) {
           this.idle()
         }
       })
@@ -98,6 +113,10 @@ let actions = {
     utils.log('transition: eat')
     this.transition('eating')
   },
+  defecate: function () {
+    utils.log('transition: defecate')
+    this.transition('defecating')
+  },
   die: function () {
     utils.log('transition: die')
     this.transition('dead')
@@ -118,6 +137,7 @@ export function setup (human, initial) {
     freeze: actions.freeze,
     sleep: actions.sleep,
     eat: actions.eat,
+    defecate: actions.defecate,
     die: actions.die
   })
 }
