@@ -13,5 +13,9 @@ setInterval(() => {
   console.log('Hunger: ' + human.properties.hunger)
   console.log('Tired: ' + human.properties.tired)
   console.log('Energy: ' + human.properties.energy)
-  console.log('State:', human.currentState())
+  console.log('State:', human.state)
 }, 100)
+
+setTimeout(() => {
+  human.machine.die()
+}, 10000)

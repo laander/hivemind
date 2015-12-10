@@ -7,6 +7,8 @@ import moment from 'moment'
 import * as acts from './actions'
 import * as utils from './utils'
 
+// define states
+
 let states = {
   embryo: {
     _onEnter: function () {
@@ -73,6 +75,8 @@ let states = {
   }
 }
 
+// define actions
+
 let actions = {
   birth: function () {
     utils.log('transition: birth')
@@ -95,12 +99,12 @@ let actions = {
     this.transition('eating')
   },
   die: function () {
-    utils.log('transition: kill')
+    utils.log('transition: die')
     this.transition('dead')
   }
 }
 
-export function newMachine (human, initial) {
+export function setup (human, initial) {
   return new machina.Fsm({
     initialize: function () {
       this.human = human

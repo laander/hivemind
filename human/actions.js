@@ -7,8 +7,8 @@ import * as constants from './constants'
 
 // utilities
 
-var rand = new Chance()
-var mod = () => {
+let rand = new Chance()
+let mod = () => {
   return rand.floating({min: 0, max: 1})
 }
 

@@ -9,10 +9,15 @@
     "moment": "^2.10.6"
   },
   "devDependencies": {
+    "jasmine": "^2.4.1",
     "standard": "^5.4.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard && node test.js",
+    "start": "node main.js"
+  },
+  "standard": {
+    "globals": [ "describe", "it", "expect" ]
   },
   "author": "Lasse Boisen Andesen <la@timekit.io> (http://timekit.io)",
   "license": "MIT"
