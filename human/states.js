@@ -6,6 +6,18 @@ import machina from 'machina'
 import moment from 'moment'
 import * as actions from './actions'
 
+// define transitions
+
+let transitions = {
+  birth: function () { this.transition('embryo') },
+  idle: function () { this.transition('idle') },
+  freeze: function () { this.transition('frozen') },
+  sleep: function () { this.transition('sleeping') },
+  eat: function () { this.transition('eating') },
+  defecate: function () { this.transition('defecating') },
+  die: function () { this.transition('dead') }
+}
+
 // define states
 
 let states = {
@@ -52,18 +64,6 @@ let states = {
     this.human.properties.deathday = moment().format()
     this.human.cycleStop()
   }
-}
-
-// define transitions
-
-let transitions = {
-  birth: function () { this.transition('embryo') },
-  idle: function () { this.transition('idle') },
-  freeze: function () { this.transition('frozen') },
-  sleep: function () { this.transition('sleeping') },
-  eat: function () { this.transition('eating') },
-  defecate: function () { this.transition('defecating') },
-  die: function () { this.transition('dead') }
 }
 
 Object.keys(states).forEach(state => states[state] = { _onEnter: states[state] })
