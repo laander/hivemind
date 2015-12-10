@@ -17,7 +17,8 @@
     "start": "node main.js"
   },
   "standard": {
-    "globals": [ "describe", "it", "expect" ]
+    "globals": [ "describe", "it", "expect" ],
+    "parser": "babel-eslint"
   },
   "author": "Lasse Boisen Andesen <la@timekit.io> (http://timekit.io)",
   "license": "MIT"

@@ -4,140 +4,91 @@
 
 import machina from 'machina'
 import moment from 'moment'
-import * as acts from './actions'
-import * as utils from './utils'
+import * as actions from './actions'
 
 // define states
 
 let states = {
-  embryo: {
-    _onEnter: function () {
-      utils.log('state: born')
-      this.human.heartbeatStart(() => {
-        let props = this.human.properties
-        if (props.age > 0.1) {
-          this.idle()
-        }
-      })
-    }
+  embryo: function () {
+    this.human.heartbeatStart(() => {
+      let props = this.human.properties
+      if (props.age > 0.1) this.idle()
+    })
   },
-  idle: {
-    _onEnter: function () {
-      utils.log('state: idle')
-      this.human.heartbeatStart(() => {
-        let props = this.human.properties
-        props = acts.idle(props)
-        if (props.hunger > 90) {
-          this.eat()
-        }
-        if (props.bowel > 90) {
-          this.defecate()
-        }
-        if (props.tired > 90) {
-          this.sleep()
-        }
-      })
-    }
+  idle: function () {
+    this.human.heartbeatStart(() => {
+      let props = this.human.properties
+      props = actions.idle(props)
+      if (props.hunger > 90) this.eat()
+      if (props.bowel > 90) this.defecate()
+      if (props.tired > 90) this.sleep()
+    })
   },
-  frozen: {
-    _onEnter: function () {
-      utils.log('state: frozen')
-      this.human.heartbeatStop()
-    }
+  frozen: function () {
+    this.human.heartbeatStop()
   },
-  sleeping: {
-    _onEnter: function () {
-      utils.log('state: sleeping')
-      this.human.heartbeatStart(() => {
-        let props = this.human.properties
-        props = acts.sleep(props)
-        if (props.tired < 5) {
-          this.idle()
-        }
-      })
-    }
+  sleeping: function () {
+    this.human.heartbeatStart(() => {
+      let props = this.human.properties
+      props = actions.sleep(props)
+      if (props.tired < 5) this.idle()
+    })
   },
-  eating: {
-    _onEnter: function () {
-      utils.log('state: eating')
-      this.human.heartbeatStart(() => {
-        let props = this.human.properties
-        props = acts.eat(props)
-        if (props.hunger < 5) {
-          this.idle()
-        }
-      })
-    }
+  eating: function () {
+    this.human.heartbeatStart(() => {
+      let props = this.human.properties
+      props = actions.eat(props)
+      if (props.hunger < 5) this.idle()
+    })
   },
-  defecating: {
-    _onEnter: function () {
-      utils.log('state: defecating')
-      this.human.heartbeatStart(() => {
-        let props = this.human.properties
-        props = acts.defecate(props)
-        if (props.bowel < 5) {
-          this.idle()
-        }
-      })
-    }
+  defecating: function () {
+    this.human.heartbeatStart(() => {
+      let props = this.human.properties
+      props = actions.defecate(props)
+      if (props.bowel < 5) this.idle()
+    })
   },
-  dead: {
-    _onEnter: function () {
-      utils.log('state: dead')
-      this.human.properties.deathday = moment().format()
-      this.human.heartbeatStop()
-    }
+  dead: function () {
+    this.human.properties.deathday = moment().format()
+    this.human.heartbeatStop()
   }
 }
 
-// define actions
+// define transitions
 
-let actions = {
+let transitions = {
   birth: function () {
-    utils.log('transition: birth')
     this.transition('embryo')
   },
   idle: function () {
-    utils.log('transition: idle')
     this.transition('idle')
   },
   freeze: function () {
-    utils.log('transition: freeze')
     this.transition('frozen')
   },
   sleep: function () {
-    utils.log('transition: sleep')
     this.transition('sleeping')
   },
   eat: function () {
-    utils.log('transition: eat')
     this.transition('eating')
   },
   defecate: function () {
-    utils.log('transition: defecate')
     this.transition('defecating')
   },
   die: function () {
-    utils.log('transition: die')
     this.transition('dead')
   }
 }
 
+Object.keys(states).forEach(state => states[state] = { _onEnter: states[state] })
+
 export function setup (human, initial) {
-  return new machina.Fsm({
+  return new machina.Fsm(Object.assign({
     initialize: function () {
       this.human = human
     },
     namespace: 'human',
     initialState: initial,
-    states: states,
-    // setup actions
-    birth: actions.birth,
-    idle: actions.idle,
-    freeze: actions.freeze,
-    sleep: actions.sleep,
-    eat: actions.eat,
-    defecate: actions.defecate,
-    die: actions.die
-  })
+    states: states
+  }, transitions))
 }

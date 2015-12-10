@@ -6,12 +6,10 @@ import * as defaults from './defaults'
 import * as constants from './constants'
 import * as states from './states'
 import * as actions from './actions'
-import * as utils from './utils'
 
 class Human {
 
   constructor (props) {
-    utils.log('human: constructing')
     if (!props) this.generateProperties()
     if (props) this.importProperties(props)
     this.machine = states.setup(this, this.state)
@@ -33,7 +31,6 @@ class Human {
   // lifecycle loops
 
   heartbeatStart (action) {
-    utils.log('human: heartbeat start')
     this.heartbeatStop()
     this.heartbeat = setInterval(() => {
       action()
@@ -42,7 +39,6 @@ class Human {
   }
 
   heartbeatStop () {
-    utils.log('human: heartbeat stop')
     clearInterval(this.heartbeat)
   }
 
@@ -56,20 +52,39 @@ class Human {
   // handle properties
 
   generateProperties () {
-    utils.log('human: generate properties')
     this.properties = defaults.generate()
   }
 
   importProperties (properties) {
-    utils.log('human: import properties')
     this.properties = JSON.parse(properties)
   }
 
   exportProperties () {
-    utils.log('human: export properties')
     this.properties.state = this.state
     return JSON.stringify(this.properties)
   }
+
+  // next level shit
+
+  // async beat () {
+  //   if (this.properties.hunger > 90) await this.eat()
+  //   if (this.properties.bowel > 90) await this.defecate()
+  //   if (this.properties.tired > 90) await this.sleep()
+  // }
+  //
+  // eat () {
+  //   this.state('eating')
+  //   return this.cycle((resolve, reject) => {
+  //     actions.eat()
+  //     if (this.properties.hunger < 9) resolve()
+  //   })
+  // }
+  //
+  // cycle (action) {
+  //   return new Promise((resolve, reject) => {
+  //     this.cycle = setInterval(() => { action(resolve, reject) }, constants.cycleTime)
+  //   })
+  // }
 
 }
 
