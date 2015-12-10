@@ -43,13 +43,13 @@ export function generate () {
     gender: gender(),
     birthday: birthday(),
     ssn: ssn(),
-    deathday: deathday,
-    age: age,
-    weight: weight,
-    energy: energy,
-    hunger: hunger,
-    tired: tired,
-    bowel: bowel,
-    state: state
+    deathday,
+    age,
+    weight,
+    energy,
+    hunger,
+    tired,
+    bowel,
+    state
   }
 }
