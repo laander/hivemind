@@ -12,19 +12,15 @@ class Human {
 
   constructor (props) {
     utils.log('human: constructing')
-
-    // if properties is passed then import, otherwise generate new
     if (!props) this.generateProperties()
     if (props) this.importProperties(props)
-
-    // setup statemachine for human states with initial state
     this.machine = states.setup(this, this.state)
   }
 
   // state machine shorthand
 
   get state () {
-    let current = (this.machine ? this.machine.state : this.properties.state || defaults.state)
+    let current = (this.machine ? this.machine.state : this.properties.state)
     this.properties.state = current
     return current
   }
@@ -37,6 +33,7 @@ class Human {
   // lifecycle loops
 
   heartbeatStart (action) {
+    utils.log('human: heartbeat start')
     this.heartbeatStop()
     this.heartbeat = setInterval(() => {
       action()
@@ -45,7 +42,7 @@ class Human {
   }
 
   heartbeatStop () {
-    utils.log('human: stop')
+    utils.log('human: heartbeat stop')
     clearInterval(this.heartbeat)
   }
 
@@ -59,17 +56,17 @@ class Human {
   // handle properties
 
   generateProperties () {
-    utils.log('human: generate')
+    utils.log('human: generate properties')
     this.properties = defaults.generate()
   }
 
   importProperties (properties) {
-    utils.log('human: revive')
+    utils.log('human: import properties')
     this.properties = JSON.parse(properties)
   }
 
   exportProperties () {
-    utils.log('human: deepfreeze')
+    utils.log('human: export properties')
     this.properties.state = this.state
     return JSON.stringify(this.properties)
   }
