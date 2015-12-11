@@ -25,7 +25,6 @@ class Human {
 
   set state (state) {
     this.machine.transition(state)
-    return this.state
   }
 
   // lifecycle loops
@@ -66,23 +65,40 @@ class Human {
 
   // next level shit
 
-  // async beat () {
-  //   if (this.properties.hunger > 90) await this.eat()
-  //   if (this.properties.bowel > 90) await this.defecate()
-  //   if (this.properties.tired > 90) await this.sleep()
+  // async idle () {
+  //   if (this.properties.hunger > 90) await this.action('eat')
+  //   if (this.properties.bowel > 90) await this.action('defecate')
+  //   if (this.properties.tired > 90) await this.action('sleep')
+  //   this.properties = actions.idle(this.properties)
   // }
   //
-  // eat () {
-  //   this.state('eating')
-  //   return this.cycle((resolve, reject) => {
-  //     actions.eat()
-  //     if (this.properties.hunger < 9) resolve()
-  //   })
+  // eating (done) {
+  //   if (this.properties.hunger < 9) done()
+  //   this.properties = modifier.eat()
   // }
+  //
+  // eat (props) {
+  //   props.hunger = sub(props.hunger, 3)
+  //   props.weight = add(props.weight, 0.5)
+  //   props.bowel = add(props.bowel, 2)
+  //   props.tired = add(props.tired, 0.5)
+  //   props.energy = add(props.energy)
+  //   return props
+  // }
+  //
+  // async action (action) {
+  //   this.state = this.transitions(action)
+  //   await this.cycle((resolve, reject) => {
+  //     if (!this.actions[action]) reject()
+  //     this[action](resolve)
+  //   })
+  // }s
   //
   // cycle (action) {
   //   return new Promise((resolve, reject) => {
-  //     this.cycle = setInterval(() => { action(resolve, reject) }, constants.cycleTime)
+  //     this.cycle = setInterval(() => {
+  //       action(resolve, reject)
+  //     }, constants.cycleTime)
   //   })
   // }
 

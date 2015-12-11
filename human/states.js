@@ -11,6 +11,7 @@ import * as actions from './actions'
 let transitions = {
   birth: function () { this.transition('embryo') },
   idle: function () { this.transition('idle') },
+  revive: function () { if (this.state !== 'dead') this.transition('idle') },
   freeze: function () { this.transition('frozen') },
   sleep: function () { this.transition('sleeping') },
   eat: function () { this.transition('eating') },

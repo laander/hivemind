@@ -4,7 +4,16 @@
   "description": "A hivemind of humans",
   "main": "main.js",
   "dependencies": {
+    "babel-plugin-transform-async-functions": "^6.3.13",
+    "babel-plugin-transform-decorators": "^6.3.13",
+    "babel-plugin-transform-decorators-legacy": "^1.2.0",
+    "babel-plugin-transform-regenerator": "^6.3.13",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-preset-stage-3": "^6.3.13",
     "chance": "^0.8.0",
+    "decorator-promise": "^1.0.0",
+    "lodash": "^3.10.1",
     "machina": "^1.1.2",
     "moment": "^2.10.6"
   },
