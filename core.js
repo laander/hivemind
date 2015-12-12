@@ -13,18 +13,10 @@ let humans = 5
 
 async function run () {
   await cluster.machine.powerOn()
-  console.log('cluster generating', cluster.pods.length)
   await cluster.generate(humans)
-  console.log('cluster generated', cluster.pods.length)
 }
 
 run()
-.then(res => {
-  console.log('success! ', res)
-})
-.catch(err => {
-  console.log('error!', err.message)
-})
 
 setInterval(loop, 1000)
 
@@ -39,14 +31,6 @@ function loop () {
 function out (pod, human) {
   console.log(Math.round(human.properties.age) + ' - ' + human.properties.ssn + ' - ' + human.state + ' - ' + Math.round(human.properties.hunger) + (pod.inCryo ? ' (frozen)' : ''))
 }
-
-// setInterval(randomKill, 5000)
-
-// function randomKill () {
-//   let pick = rand.integer({min: 0, max: humans - 1})
-//   cluster.pods[pick].terminate()
-//   cluster.pods[pick].seed()
-// }
 
 setInterval(randomFreeze, 9000)
 
@@ -69,6 +53,14 @@ function randomRevive () {
     console.log(e)
   }
 }
+
+// setInterval(randomKill, 5000)
+
+// function randomKill () {
+//   let pick = rand.integer({min: 0, max: humans - 1})
+//   cluster.pods[pick].terminate()
+//   cluster.pods[pick].seed()
+// }
 
 //
 // function generateHuman (slot) {

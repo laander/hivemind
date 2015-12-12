@@ -34,7 +34,6 @@ let hunger = 1
 let tired = 1
 let bowel = 1
 let deathday = null
-let state = 'embryo'
 
 export function generate () {
   return {
@@ -49,7 +48,6 @@ export function generate () {
     energy,
     hunger,
     tired,
-    bowel,
-    state
+    bowel
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Pod
+ * Cluster
  */
 
 import Pod from '../pod'

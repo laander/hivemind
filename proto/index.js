@@ -15,14 +15,19 @@ class Proto {
     return this.machine.state
   }
 
+  set state (state) {
+    this.machine.transition(state)
+  }
+
   _setupMachine (settings) {
     let newStates = {}
+    let mother = this
     Object.keys(settings.states).forEach(state => newStates[state] = { _onEnter: settings.states[state] })
     let machineSettings = Object.assign({
       initialize: function () {
-        this.mother = this
+        this.mother = mother
       },
-      namespace: 'human',
+      namespace: 'machine',
       initialState: settings.initialState,
       states: newStates
     }, settings.transitions)

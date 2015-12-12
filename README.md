@@ -21,6 +21,9 @@ Pods have the sole purpose of containing humans and controlling their actions. H
 **Cluster**
 Clusters are top-level entities that pods are connected to. They can generate new pods, shut them down and monitor their health.
 
+***Proto***
+The proto class is a mother prototype that has common State Machine and Listener logic that all entities inherit from
+
 ## Next
 
 - [ ] Energy transport system

@@ -2,29 +2,22 @@
  * Human entity
  */
 
+import Proto from '../proto'
 import * as defaults from './defaults'
 import * as constants from './constants'
-import * as states from './states'
+import * as machine from './machine'
 import * as actions from './actions'
 
-class Human {
+class Human extends Proto {
 
-  constructor (props) {
-    if (!props) this.generateProperties()
-    if (props) this.importProperties(props)
-    this.machine = states.setup(this, this.state)
-  }
-
-  // state machine shorthand
-
-  get state () {
-    let current = (this.machine ? this.machine.state : this.properties.state)
-    this.properties.state = current
-    return current
-  }
-
-  set state (state) {
-    this.machine.transition(state)
+  constructor (dna) {
+    super({
+      initialState: 'embryo',
+      states: machine.states,
+      transitions: machine.transitions
+    })
+    if (!dna) this.generateProperties()
+    if (dna) this.importProperties(dna)
   }
 
   // lifecycle loops
@@ -59,7 +52,6 @@ class Human {
   }
 
   exportProperties () {
-    this.properties.state = this.state
     return JSON.stringify(this.properties)
   }
 

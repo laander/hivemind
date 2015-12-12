@@ -9,36 +9,41 @@ describe('human', () => {
   it('must init', () => {
     let human = new Human()
     expect(human).toBeDefined()
-    expect(human.properties).toBeDefined()
-    expect(human.cycle).toBeDefined()
     expect(human.state).toBe('embryo')
+    expect(human.properties).toBeDefined()
+    human.machine.birth()
+    expect(human.state).toBe('idle')
+    expect(human.cycle).toBeDefined()
   })
   it('must init with properties', () => {
     let human = new Human(testProperties)
     expect(human).toBeDefined()
+    expect(human.state).toBe('embryo')
     expect(human.properties).toBeDefined()
-    expect(human.cycle).toBeDefined()
+    human.machine.birth()
     expect(human.state).toBe('idle')
+    expect(human.cycle).toBeDefined()
   })
   it('must init, freeze and unfreeze', () => {
     // create human and freeze it
     let human = new Human()
+    human.machine.birth()
     human.machine.freeze()
     expect(human.state).toBe('frozen')
     let props = human.exportProperties()
     // unfreeze human again
     human.importProperties(props)
-    human.machine.idle()
+    human.machine.revive()
     expect(human.state).toBe('idle')
   })
   it('must init, export properties and init new instance with properties', () => {
     // create human and freeze it
     let human = new Human()
+    human.machine.birth()
     let props = human.exportProperties()
     // unfreeze human again
     let human2 = new Human(props)
-    human2.importProperties(props)
-    expect(human2.properties).toBeDefined()
-    expect(human2.state).toBe(JSON.parse(props).state)
+    let props2 = human2.exportProperties()
+    expect(props2).toEqual(props)
   })
 })

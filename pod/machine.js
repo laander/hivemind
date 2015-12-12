@@ -1,5 +1,5 @@
 /**
- * Human states
+ * Pod states
  */
 
 export var transitions = {
