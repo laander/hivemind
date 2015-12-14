@@ -3,39 +3,85 @@
  */
 
 import machina from 'machina'
+import moment from 'moment'
 
 class Proto {
 
-  constructor (settings) {
-    this._setupMachine(settings)
-    this._listeners = settings.listeners
+  constructor () {
+    this._setupMachine()
   }
 
   get state () {
     return this.machine.state
   }
 
-  set state (state) {
-    this.machine.transition(state)
+  do (doAction, args) {
+    let result = this.machine.handle(doAction, args)
+    if (!result) throw new Error('Cant perform action "' + doAction + '", handle not found in current state "' + this.state + '"')
+    return result
   }
 
-  _setupMachine (settings) {
+  on (action) {
+    return new Promise(res => {
+      let event = this.machine.on('handled', data => {
+        if (data.inputType === action) {
+          event.off()
+          res()
+        }
+      })
+    })
+  }
+
+  when (state) {
+    return new Promise(res => {
+      let event = this.machine.on('transition', data => {
+        if (data.toState === state) {
+          event.off()
+          res()
+        }
+      })
+    })
+  }
+
+  whenDone (state) {
+    return new Promise(res => {
+      let event = this.machine.on('transition', data => {
+        if (data.fromState === state) {
+          event.off()
+          res()
+        }
+      })
+    })
+  }
+
+  _log (...data) {
+    if (this.constructor.name === 'Human') return
+    console.log(moment().format('hh:mm:ss'), '|', this.constructor.name, '=>', ...data)
+  }
+
+  _sleep (time) {
+    return new Promise(resolve => setTimeout(resolve, time))
+  }
+
+  _setupMachine () {
     let newStates = {}
-    let mother = this
-    Object.keys(settings.states).forEach(state => newStates[state] = { _onEnter: settings.states[state] })
-    let machineSettings = Object.assign({
-      initialize: function () {
-        this.mother = mother
-      },
+    let settings = { states: this._machinery }
+    Object.keys(settings.states).forEach(state => {
+      newStates[state] = {}
+      Object.keys(settings.states[state]).forEach(func => {
+        newStates[state][func] = settings.states[state][func].bind(this)
+      })
+    })
+    let machineSettings = {
       namespace: 'machine',
-      initialState: settings.initialState,
+      initialState: 'initialized',
       states: newStates
-    }, settings.transitions)
+    }
     this.machine = new machina.Fsm(machineSettings)
   }
 
   _fireListeners (data) {
-    if (this._listeners[data.toState]) this._listeners[data.toState].call(this)
+    if (this._listeners && this._listeners[data.toState]) this._listeners[data.toState].call(this)
   }
 
   _setupListeners (child) {

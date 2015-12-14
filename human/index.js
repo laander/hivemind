@@ -4,20 +4,21 @@
 
 import Proto from '../proto'
 import * as defaults from './defaults'
-import * as constants from './constants'
-import * as machine from './machine'
+import * as constants from '../world/constants'
+import * as modifiers from './modifiers'
 import * as actions from './actions'
+import * as states from './states'
+import { HumanError } from './utils'
 
 class Human extends Proto {
 
   constructor (dna) {
-    super({
-      initialState: 'embryo',
-      states: machine.states,
-      transitions: machine.transitions
-    })
+    super()
     if (!dna) this.generateProperties()
     if (dna) this.importProperties(dna)
+    // this.machine.on('transition', data => {
+    //   if (data.toState !== 'dead' && this.state === 'dead') throw new HumanError('Human is dead, cannot transition')
+    // })
   }
 
   // lifecycle loops
@@ -27,7 +28,7 @@ class Human extends Proto {
     this.cycle = setInterval(() => {
       action()
       this.heartbeat()
-    }, constants.cycleTime)
+    }, constants.time.cycle)
   }
 
   cycleStop () {
@@ -35,10 +36,8 @@ class Human extends Proto {
   }
 
   heartbeat () {
-    this.properties = actions.grow(this.properties)
-    if (actions.fatality(this.properties)) {
-      this.machine.die()
-    }
+    this.properties = modifiers.grow(this.properties)
+    if (modifiers.fatality(this.properties)) this.do('die')
   }
 
   // handle properties
@@ -53,6 +52,53 @@ class Human extends Proto {
 
   exportProperties () {
     return JSON.stringify(this.properties)
+  }
+
+  // state machine setup
+
+  get _machinery () {
+    return {
+      initialized: {
+        _onEnter: states.initialized,
+        conceive: actions.conceive
+      },
+      embryo: {
+        _onEnter: states.embryo,
+        birth: actions.birth,
+        die: actions.die
+      },
+      idle: {
+        _onEnter: states.idle,
+        freeze: actions.freeze,
+        sleep: actions.sleep,
+        eat: actions.eat,
+        defecate: actions.defecate,
+        die: actions.die
+      },
+      frozen: {
+        _onEnter: states.frozen,
+        revive: actions.revive,
+        die: actions.die
+      },
+      sleeping: {
+        _onEnter: states.sleeping,
+        idle: actions.idle,
+        die: actions.die
+      },
+      eating: {
+        _onEnter: states.eating,
+        idle: actions.idle,
+        die: actions.die
+      },
+      defecating: {
+        _onEnter: states.defecating,
+        idle: actions.idle,
+        die: actions.die
+      },
+      dead: {
+        _onEnter: states.dead
+      }
+    }
   }
 
   // next level shit

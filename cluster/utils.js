@@ -1,5 +1,5 @@
 /**
- * Cluster utils
+ * Cluster
  */
 
 export function ClusterError (message) {

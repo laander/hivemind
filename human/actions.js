@@ -1,84 +1,52 @@
 /**
- * Human actions
+ * Human
  */
 
-import Chance from 'chance'
-import * as constants from './constants'
+import { HumanError } from './utils'
 
-// utilities
-
-let rand = new Chance()
-let cyclesPerSecond = constants.cycleTime / 1000
-let modifier = cyclesPerSecond * constants.actionModifier
-
-let noise = () => {
-  return rand.floating({min: 0, max: 1})
+export async function conceive () {
+  this._log('action', 'conceive')
+  if (this.state !== 'initialized') throw new HumanError('Human is already conceived')
+  this.machine.transition('embryo')
 }
 
-function normalize (value) {
-  value = Math.abs(value)
-  return (value > 99 ? 99 : value)
+export async function birth () {
+  this._log('action', 'birth')
+  if (this.state !== 'embryo') throw new HumanError('Human is not in embryo state, cannot give birth')
+  this.machine.transition('idle')
 }
 
-function add (value, multi = 1) {
-  return normalize(value + (noise() * multi * modifier))
+export async function idle () {
+  this._log('action', 'idle')
+  this.machine.transition('idle')
 }
 
-function sub (value, multi = 1) {
-  return normalize(value - (noise() * multi * modifier))
+export async function revive () {
+  this._log('action', 'revive')
+  this.machine.transition('idle')
 }
 
-function seniority (value, age) {
-  if (age < 20) return value * 0.5
-  if (age >= 20 && age <= 50) return value * 1
-  if (age >= 50 && age <= 80) return value * 4
-  if (age >= 80 && age <= 100) return value * 8
-  if (age >= 100) return value * 12
+export async function freeze () {
+  this._log('action', 'freeze')
+  this.machine.transition('frozen')
 }
 
-// actions
-
-export function grow (props) {
-  props.age = props.age + (modifier / constants.ageModifier)
-  if (props.age > 0.1) props.weight = props.weight + ((10 / seniority(noise(), props.age)) * modifier / 1000)
-  return props
+export async function sleep () {
+  this._log('action', 'sleep')
+  this.machine.transition('sleeping')
 }
 
-export function fatality (props) {
-  let chance = seniority(((props.age * modifier) / 10000), props.age)
-  return rand.bool({likelihood: (chance < 99 ? chance : 99)})
+export async function eat () {
+  this._log('action', 'eat')
+  this.machine.transition('eating')
 }
 
-export function idle (props) {
-  props.hunger = add(props.hunger)
-  props.tired = add(props.tired, 0.5)
-  props.energy = sub(props.energy, 0.5)
-  return props
+export async function defecate () {
+  this._log('action', 'defecate')
+  this.machine.transition('defecating')
 }
 
-export function eat (props) {
-  props.hunger = sub(props.hunger, 3)
-  props.weight = add(props.weight, 0.5)
-  props.bowel = add(props.bowel, 2)
-  props.tired = add(props.tired, 0.5)
-  props.energy = add(props.energy)
-  return props
-}
-
-export function sleep (props) {
-  props.tired = sub(props.tired, 2)
-  props.energy = add(props.energy, 2)
-  return props
-}
-
-export function defecate (props) {
-  props.bowel = sub(props.bowel, 4)
-  return props
-}
-
-export function workout (props) {
-  props.tired = add(props.tired, 2)
-  props.hunger = add(props.hunger)
-  props.energy = sub(props.energy, 2)
-  return props
+export async function die () {
+  this._log('action', 'die')
+  this.machine.transition('dead')
 }

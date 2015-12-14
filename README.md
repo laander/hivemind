@@ -24,6 +24,19 @@ Clusters are top-level entities that pods are connected to. They can generate ne
 ***Proto***
 The proto class is a mother prototype that has common State Machine and Listener logic that all entities inherit from
 
+## Entity interface
+
+Every entity that extends the Proto class have the following properties/methods that return promises:
+
+```
+let human = new Human()
+human.state
+human.do('eat', 10)
+human.on('transition')
+human.when('eating')
+human.whenDone('eating')
+```
+
 ## Next
 
 - [ ] Energy transport system
