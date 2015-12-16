@@ -4,11 +4,10 @@
 
 import Proto from '../proto'
 import * as defaults from './defaults'
-import * as constants from '../world/constants'
+import constants from '../world/constants'
 import * as modifiers from './modifiers'
 import * as actions from './actions'
 import * as states from './states'
-import { HumanError } from './utils'
 
 class Human extends Proto {
 
@@ -16,9 +15,6 @@ class Human extends Proto {
     super()
     if (!dna) this.generateProperties()
     if (dna) this.importProperties(dna)
-    // this.machine.on('transition', data => {
-    //   if (data.toState !== 'dead' && this.state === 'dead') throw new HumanError('Human is dead, cannot transition')
-    // })
   }
 
   // lifecycle loops
@@ -65,14 +61,15 @@ class Human extends Proto {
       embryo: {
         _onEnter: states.embryo,
         birth: actions.birth,
+        freeze: actions.freeze,
         die: actions.die
       },
       idle: {
         _onEnter: states.idle,
-        freeze: actions.freeze,
         sleep: actions.sleep,
         eat: actions.eat,
         defecate: actions.defecate,
+        freeze: actions.freeze,
         die: actions.die
       },
       frozen: {
@@ -83,16 +80,19 @@ class Human extends Proto {
       sleeping: {
         _onEnter: states.sleeping,
         idle: actions.idle,
+        freeze: actions.freeze,
         die: actions.die
       },
       eating: {
         _onEnter: states.eating,
         idle: actions.idle,
+        freeze: actions.freeze,
         die: actions.die
       },
       defecating: {
         _onEnter: states.defecating,
         idle: actions.idle,
+        freeze: actions.freeze,
         die: actions.die
       },
       dead: {

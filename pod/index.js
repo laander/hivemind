@@ -18,6 +18,7 @@ class Pod extends Proto {
     this._human
     this._generateProperties()
     this._listeners = listeners
+    this._humansCount = 0
   }
 
   // vars

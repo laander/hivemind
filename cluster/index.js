@@ -64,6 +64,8 @@ class Cluster extends Proto {
       operating: {
         _onEnter: states.operating,
         powerOff: actions.powerOff,
+        generatePods: actions.generatePods,
+        seedPods: actions.seedPods,
         cryoFreezePods: actions.cryoFreezePods,
         cryoRevivePods: actions.cryoRevivePods
       }

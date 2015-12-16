@@ -24,8 +24,8 @@ export function idle () {
     let props = this.properties
     props = modifiers.idle(props)
     if (props.hunger > 90) this.do('eat')
-    if (props.bowel > 90) this.do('defecate')
-    if (props.tired > 90) this.do('sleep')
+    else if (props.bowel > 90) this.do('defecate')
+    else if (props.tired > 90) this.do('sleep')
   })
 }
 

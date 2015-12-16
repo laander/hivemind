@@ -2,33 +2,21 @@
  * Human
  */
 
-import { HumanError } from './utils'
+import constants from '../world/constants'
 
 export async function conceive () {
   this._log('action', 'conceive')
-  if (this.state !== 'initialized') throw new HumanError('Human is already conceived')
   this.machine.transition('embryo')
 }
 
 export async function birth () {
   this._log('action', 'birth')
-  if (this.state !== 'embryo') throw new HumanError('Human is not in embryo state, cannot give birth')
   this.machine.transition('idle')
 }
 
 export async function idle () {
   this._log('action', 'idle')
   this.machine.transition('idle')
-}
-
-export async function revive () {
-  this._log('action', 'revive')
-  this.machine.transition('idle')
-}
-
-export async function freeze () {
-  this._log('action', 'freeze')
-  this.machine.transition('frozen')
 }
 
 export async function sleep () {
@@ -44,6 +32,18 @@ export async function eat () {
 export async function defecate () {
   this._log('action', 'defecate')
   this.machine.transition('defecating')
+}
+
+export async function freeze () {
+  this._log('action', 'freeze')
+  await this._sleep(constants.human.cryo)
+  this.machine.transition('frozen')
+}
+
+export async function revive () {
+  this._log('action', 'revive')
+  await this._sleep(constants.human.cryo)
+  this.machine.transition('idle')
 }
 
 export async function die () {

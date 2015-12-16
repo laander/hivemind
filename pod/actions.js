@@ -3,7 +3,7 @@
  */
 
 import Human from '../human'
-import * as constants from '../world/constants'
+import constants from '../world/constants'
 import { PodError } from './utils'
 
 export async function assemble () {
@@ -20,8 +20,12 @@ export async function powerOn () {
 
 export async function powerOff () {
   this._log('action', 'powerOff')
-  if (this.isMounted) this._flush()
   await this._sleep(constants.pod.powering)
+  if (this.isMounted) {
+    this._destroyListeners(this._human)
+    await this._human.do('die')
+    this._flush()
+  }
   this.machine.transition('off')
 }
 
@@ -29,6 +33,7 @@ export async function seed () {
   this._log('action', 'seed')
   if (this.isMounted) throw new PodError('Human already mounted')
   this._human = new Human()
+  this._humansCount++
   await this._human.do('conceive')
   this._setupListeners(this._human)
   this.machine.transition('operating')

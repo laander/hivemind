@@ -2,9 +2,17 @@
  * Bootstap jasmine and run tests
  */
 
-var Jasmine = require('jasmine')
-require('babel-register')
+process.env.NODE_ENV = 'TEST'
 
-var jasmine = new Jasmine()
-jasmine.loadConfigFile('jasmine.json')
-jasmine.execute()
+var Jasmine = require('jasmine')
+var SpecReporter = require('jasmine-spec-reporter')
+var noop = function () {}
+
+require('babel-register')
+require('babel-polyfill')
+
+var jas = new Jasmine()
+jas.configureDefaultReporter({print: noop})    // remove default reporter logs
+jasmine.getEnv().addReporter(new SpecReporter())   // add jas-spec-reporter
+jas.loadConfigFile('jasmine.json')
+jas.execute()

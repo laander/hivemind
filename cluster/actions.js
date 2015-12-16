@@ -2,7 +2,7 @@
  * Cluster
  */
 
-import * as constants from '../world/constants'
+import constants from '../world/constants'
 import * as lo from 'lodash'
 
 export async function assemble () {
@@ -24,7 +24,7 @@ export async function powerOff () {
   this.machine.transition('off')
 }
 
-export async function generatePods (amount) {
+export async function generatePods (amount = 1) {
   this._log('action', 'generatePods')
   await lo.range(amount).reduce(cur => {
     return cur.then(() => this._constructPod())
@@ -36,6 +36,14 @@ export async function activatePods () {
   this._log('action', 'activatePods')
   await this._pods.reduce((prev, pod) => {
     return prev.then(() => pod.do('powerOn'))
+  }, Promise.resolve())
+  this.machine.transition('operating')
+}
+
+export async function seedPods () {
+  this._log('action', 'seedPods')
+  await this._pods.reduce((prev, pod) => {
+    return prev.then(async () => pod.do('seed'))
   }, Promise.resolve())
   this.machine.transition('operating')
 }

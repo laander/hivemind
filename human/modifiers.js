@@ -3,7 +3,7 @@
  */
 
 import Chance from 'chance'
-import * as constants from '../world/constants'
+import constants from '../world/constants'
 
 // utilities
 

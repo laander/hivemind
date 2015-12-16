@@ -8,21 +8,34 @@ import moment from 'moment'
 let cluster
 let loopInterval
 
-export async function start () {
-  let humans = 5
-  try {
-    cluster = new Cluster()
-    await cluster.do('assemble')
-    await cluster.do('powerOn')
-    await cluster.do('generatePods', humans)
-    _loop()
-  } catch (e) {
-    console.log('ERROR', e.message, e.stack)
-  }
+export async function start (amount = 3) {
+  cluster = new Cluster()
+  await cluster.do('assemble')
+  await cluster.do('powerOn')
+  await cluster.do('generatePods', amount)
+  _loop()
 }
 
-export async function shutdown () {
+export async function clusterDo (action) {
+  if (action === 'new') { cluster = new Cluster(); return }
+  await cluster.do(action)
+  _loop()
+}
+
+export async function generatePods (amount = 3) {
+  await cluster.do('generatePods', amount)
+  _loop()
+}
+
+export async function powerOutage () {
   await cluster.do('powerOff')
+  _loop()
+}
+
+export async function powerRecover () {
+  await cluster.do('powerOn')
+  await cluster.do('activatePods')
+  await cluster.do('seedPods')
   _loop()
 }
 
@@ -37,7 +50,7 @@ export async function revive () {
 }
 
 export function listen () {
-  loopInterval = setInterval(_loop, 1000)
+  loopInterval = setInterval(_loop, 50)
 }
 
 export function unlisten () {
@@ -64,7 +77,7 @@ function _out (pod, human) {
     moment().format('hh:mm:ss'),
     '|',
     pod.state,
-    '[' + pod.cryoBank.length + ']',
+    '[' + pod._humansCount + ']',
     '|',
     Math.round(human.properties.age) + ' - ' +
     human.properties.name + ' - ' +
