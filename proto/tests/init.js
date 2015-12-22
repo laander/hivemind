@@ -3,22 +3,11 @@
  */
 
 import Proto from '../index'
+import Entity from './_entity'
 
 describe('Proto: init', function () {
   it('must create new class that extends proto', async function (done) {
     try {
-      class Entity extends Proto {
-        constructor () {
-          super()
-        }
-        get _machinery () {
-          return {
-            initialized: {
-              _onEnter: function () { this.flag = true }
-            }
-          }
-        }
-      }
       let entity = new Entity()
       expect(entity).toBeDefined()
       expect(entity.machine).toBeDefined()
@@ -29,39 +18,21 @@ describe('Proto: init', function () {
   })
   it('must create new class and perform an action', async function (done) {
     try {
-      class Entity extends Proto {
-        constructor () {
-          super()
-        }
-        get _machinery () {
-          return {
-            initialized: {
-              _onEnter: function () { this.flag = false },
-              run: async function () { this.machine.transition('running') }
-            },
-            running: {
-              _onEnter: function () { this.flag = true }
-            }
-          }
-        }
-      }
       let entity = new Entity()
       expect(entity.state).toBe('initialized')
-      expect(entity.flag).toBeFalsy()
+      expect(entity.flag).toBeTruthy()
       await entity.do('run')
       expect(entity.state).toBe('running')
-      expect(entity.flag).toBeTruthy()
+      expect(entity.flag).toBeFalsy()
       done()
     } catch (e) { fail(e) }
   })
   it('must not initialize new class without _machinery configuration', async function (done) {
     try {
-      class Entity extends Proto {
-        constructor () {
-          super()
-        }
+      class Entity2 extends Proto {
+        constructor () { super() }
       }
-      let entity = new Entity()
+      let entity = new Entity2()
       expect(entity).toBeUndefined()
       fail()
     } catch (e) {
@@ -69,5 +40,20 @@ describe('Proto: init', function () {
       expect(e.message).toBe('_machinery not present on proto entity class')
       done()
     }
+  })
+  it('must support Kefir reactive streams when action is performed', async function (done) {
+    try {
+      let entity = new Entity()
+      let spied = { onStreamPing: () => 'test' }
+      spyOn(spied, 'onStreamPing')
+      let stream = entity.observe().map(x => x.toState)
+      stream.onValue(spied.onStreamPing)
+      await entity.do('run')
+      expect(spied.onStreamPing).toHaveBeenCalledWith('running')
+      stream.offValue(spied.onStreamPing)
+      await entity.do('continue')
+      expect(spied.onStreamPing).not.toHaveBeenCalledWith('continuing')
+      done()
+    } catch (e) { fail(e) }
   })
 })

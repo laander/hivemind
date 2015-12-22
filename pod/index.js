@@ -12,13 +12,15 @@ import { PodError } from './utils'
 
 class Pod extends Proto {
 
-  constructor () {
+  constructor (blueprint) {
     super() // { listeners: listeners }
     this._cryoBank = []
     this._human
-    this._generateProperties()
-    this._listeners = listeners
+    //this._listeners = listeners
     this._humansCount = 0
+    //this._observers = []
+    if (!blueprint) this._generateProperties()
+    if (blueprint) this.importProperties(blueprint)
   }
 
   // vars
@@ -52,15 +54,26 @@ class Pod extends Proto {
   _flush () {
     this._log('action', 'flush')
     if (!this.isMounted) throw new PodError('Human not mounted')
-    this._destroyListeners(this._human)
+    //this._destroyListeners(this._human)
     delete this._human
   }
 
   async _terminate () {
     this._log('action', 'terminate')
     if (!this.isMounted) throw new PodError('Human not mounted')
+    //this._destroyListeners(this._human)
     await this._human.do('die')
-    this.flush()
+    this._flush()
+  }
+
+  _reseedOnDead (human) {
+    human.observeDead()
+    .then(async () => {
+      this._log('action', 'reseedOnDead')
+      if (this.state !== 'operating') return
+      this.do('flush')
+      await this.do('seed')
+    })
   }
 
   // state machine setup
@@ -88,7 +101,7 @@ class Pod extends Proto {
         _onEnter: states.operating,
         powerOff: actions.powerOff,
         freeze: actions.cryoFreeze,
-        reSeed: actions.seed
+        flush: actions.flush
       }
     }
   }

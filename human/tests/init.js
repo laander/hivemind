@@ -30,20 +30,6 @@ describe('Human: init', function () {
       done()
     } catch (e) { fail(e) }
   })
-  it('must init, freeze and revive again', async function (done) {
-    try {
-      let human = new Human()
-      await human.do('conceive')
-      await human.when('idle')
-      await human.do('freeze')
-      expect(human.state).toBe('frozen')
-      let props = human.exportProperties()
-      human.importProperties(props)
-      await human.do('revive')
-      expect(human.state).toBe('idle')
-      done()
-    } catch (e) { fail(e) }
-  })
   it('must init, export properties and init with same properties', async function (done) {
     try {
       let human = new Human()

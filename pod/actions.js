@@ -21,11 +21,7 @@ export async function powerOn () {
 export async function powerOff () {
   this._log('action', 'powerOff')
   await this._sleep(constants.pod.powering)
-  if (this.isMounted) {
-    this._destroyListeners(this._human)
-    await this._human.do('die')
-    this._flush()
-  }
+  if (this.isMounted) await this._terminate()
   this.machine.transition('off')
 }
 
@@ -35,8 +31,16 @@ export async function seed () {
   this._human = new Human()
   this._humansCount++
   await this._human.do('conceive')
-  this._setupListeners(this._human)
+  //this._setupListeners(this._human)
+  //this._activateAi(this._human)
+  this._reseedOnDead(this._human)
   this.machine.transition('operating')
+}
+
+export async function flush () {
+  this._log('action', 'flush')
+  this._flush()
+  this.machine.transition('on')
 }
 
 export async function cryoFreeze () {
@@ -54,6 +58,6 @@ export async function cryoRevive () {
   if (!this.inCryo) throw new PodError('No human in bank')
   this._human = this._cryoBank.pop()
   await this._human.do('revive')
-  this._setupListeners(this._human)
+  //this._setupListeners(this._human)
   this.machine.transition('operating')
 }

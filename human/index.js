@@ -2,22 +2,38 @@
  * Human entity
  */
 
+import World from '../world'
 import Proto from '../proto'
 import * as defaults from './defaults'
 import constants from '../world/constants'
 import * as modifiers from './modifiers'
 import * as actions from './actions'
 import * as states from './states'
+import Kefir from 'kefir'
 
 class Human extends Proto {
 
   constructor (dna) {
     super()
-    if (!dna) this.generateProperties()
+    if (!dna) this._generateProperties()
     if (dna) this.importProperties(dna)
+    this._ai = World().ai
+    this._aiActive = true
   }
 
   // lifecycle loops
+
+  aiDecider () {
+    let props = this.keyProperties
+    if (this._aiActive) {
+      let decision = this._ai.decide(props)
+      if (decision !== 'idle') this.do(decision)
+    } else {
+      if (props[1] > 90) this.do('eat')
+      else if (props[2] > 90) this.do('defecate')
+      else if (props[3] > 90) this.do('sleep')
+    }
+  }
 
   cycleStart (action) {
     this.cycleStop()
@@ -36,18 +52,29 @@ class Human extends Proto {
     if (modifiers.fatality(this.properties)) this.do('die')
   }
 
+  observeDead () {
+    return this.observe('handled').filter(x => x.inputType === 'die').take(1).toPromise()
+  }
+
+  observeCycle () {
+    return Kefir.stream(emitter => {
+      this.emitCycle = emitter
+    })
+  }
+
   // handle properties
 
-  generateProperties () {
+  get keyProperties () {
+    return [
+      this.properties.energy,
+      this.properties.hunger,
+      this.properties.bowel,
+      this.properties.tired
+    ]
+  }
+
+  _generateProperties () {
     this.properties = defaults.generate()
-  }
-
-  importProperties (properties) {
-    this.properties = JSON.parse(properties)
-  }
-
-  exportProperties () {
-    return JSON.stringify(this.properties)
   }
 
   // state machine setup

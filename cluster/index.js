@@ -5,14 +5,17 @@
 import Proto from '../proto'
 import Pod from '../pod'
 import { ClusterError } from './utils'
+import * as defaults from './defaults'
 import * as actions from './actions'
 import * as states from './states'
 
 class Cluster extends Proto {
 
-  constructor () {
+  constructor (blueprint) {
     super()
     this._pods = []
+    if (!blueprint) this._generateProperties()
+    if (blueprint) this.importProperties(blueprint)
   }
 
   // vars
@@ -23,6 +26,10 @@ class Cluster extends Proto {
 
   set pods (val) {
     throw new ClusterError('Not allowed to set pod directly')
+  }
+
+  _generateProperties () {
+    this.properties = defaults.generate()
   }
 
   // methods

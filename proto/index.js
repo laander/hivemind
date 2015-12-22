@@ -5,11 +5,13 @@
 import constants from '../world/constants'
 import machina from 'machina'
 import moment from 'moment'
+import Kefir from 'kefir'
 
 class Proto {
 
   constructor () {
     this._setupMachine()
+    this._listenerInstances = []
   }
 
   get state () {
@@ -52,6 +54,14 @@ class Proto {
     })
   }
 
+  importProperties (properties) {
+    this.properties = JSON.parse(properties)
+  }
+
+  exportProperties () {
+    return JSON.stringify(this.properties)
+  }
+
   _log (...data) {
     // if (this.constructor.name === 'Human') return
     if (!constants.log) return
@@ -71,6 +81,7 @@ class Proto {
       Object.keys(settings.states[state]).forEach(func => {
         newStates[state][func] = settings.states[state][func].bind(this)
       })
+      //newStates[state]._onExit = () => { this._log('exiting', this.state) }
     })
     let machineSettings = {
       namespace: 'machine',
@@ -81,15 +92,22 @@ class Proto {
   }
 
   _fireListeners (data) {
-    if (this._listeners && this._listeners[data.toState]) this._listeners[data.toState].call(this)
+    // console.log('FIRE', this)
+    if (!this._listeners || !this._listeners[data.toState]) return
+    this._listeners[data.toState].call(this)
+    .catch(this._log)
   }
 
   _setupListeners (child) {
-    child.machine.on('transition', this._fireListeners.bind(this))
+    this._listenerInstances[child] = child.machine.on('transition', this._fireListeners.bind(this))
   }
 
   _destroyListeners (child) {
-    child.machine.off('transition', this._fireListeners.bind(this))
+    this._listenerInstances[child].off()
+  }
+
+  observe (event = 'transition') {
+    return Kefir.fromEvents(this.machine, event)
   }
 
 }

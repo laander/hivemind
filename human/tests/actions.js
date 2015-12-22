@@ -26,7 +26,6 @@ describe('Human: actions', function () {
     try {
       let human = new Human()
       await human.do('conceive')
-      await human.whenDone('embryo')
       await human.when('eating')
       let hunger = human.properties.hunger
       let bowel = human.properties.bowel
@@ -43,7 +42,6 @@ describe('Human: actions', function () {
     try {
       let human = new Human()
       await human.do('conceive')
-      await human.whenDone('embryo')
       await human.when('sleeping')
       let tired = human.properties.tired
       let energy = human.properties.energy
@@ -58,7 +56,6 @@ describe('Human: actions', function () {
     try {
       let human = new Human()
       await human.do('conceive')
-      await human.whenDone('embryo')
       await human.when('defecating')
       let bowel = human.properties.bowel
       await human.whenDone('defecating')
@@ -74,6 +71,9 @@ describe('Human: actions', function () {
       let age = human.properties.age
       await human.whenDone('embryo')
       expect(human.properties.age).toBeGreaterThan(age)
+      let age2 = human.properties.age
+      await human.whenDone('idle')
+      expect(human.properties.age).toBeGreaterThan(age2)
       done()
     } catch (e) { fail(e) }
   })

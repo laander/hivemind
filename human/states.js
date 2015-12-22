@@ -21,11 +21,13 @@ export function embryo () {
 export function idle () {
   this._log('state', 'idle')
   this.cycleStart(() => {
+    if (this.emitCycle) this.emitCycle.emit(this.keyProperties)
     let props = this.properties
     props = modifiers.idle(props)
-    if (props.hunger > 90) this.do('eat')
-    else if (props.bowel > 90) this.do('defecate')
-    else if (props.tired > 90) this.do('sleep')
+    this.aiDecider()
+    // if (props.hunger > 90) this.do('eat')
+    // else if (props.bowel > 90) this.do('defecate')
+    // else if (props.tired > 90) this.do('sleep')
   })
 }
 

@@ -2,14 +2,15 @@
  * Orchestrator
  */
 
-import Cluster from '../cluster'
+import World from './index'
 import moment from 'moment'
 
-let cluster
 let loopInterval
 
+var world = new World()
+var cluster = world.cluster
+
 export async function start (amount = 3) {
-  cluster = new Cluster()
   await cluster.do('assemble')
   await cluster.do('powerOn')
   await cluster.do('generatePods', amount)
@@ -17,7 +18,6 @@ export async function start (amount = 3) {
 }
 
 export async function clusterDo (action) {
-  if (action === 'new') { cluster = new Cluster(); return }
   await cluster.do(action)
   _loop()
 }

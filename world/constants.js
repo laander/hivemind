@@ -7,7 +7,7 @@ var constants = {}
 switch (process.env.NODE_ENV) {
   case 'DEV':
 
-    constants.log = true
+    constants.log = false
     constants.time = {
       cycle: 10 // 100
     }
@@ -22,7 +22,7 @@ switch (process.env.NODE_ENV) {
     constants.human = {
       cryo: 1000,
       agingModifier: 60, // 60 - how many real-life seconds does it take for 1 virtual year
-      actionModifier: 10 // 1
+      actionModifier: 100 // 1
     }
     break
 
@@ -33,17 +33,17 @@ switch (process.env.NODE_ENV) {
       cycle: 1 // 100
     }
     constants.cluster = {
-      assembling: 1000, // 1000
-      powering: 500 // 1000
+      assembling: 1, // 1000
+      powering: 1 // 1000
     }
     constants.pod = {
-      assembling: 1000, // 1000
-      powering: 500 // 1000
+      assembling: 1, // 1000
+      powering: 1 // 1000
     }
     constants.human = {
-      cryo: 1000,
+      cryo: 1,
       agingModifier: 60, // 60 - how many real-life seconds does it take for 1 virtual year
-      actionModifier: 500 // 1
+      actionModifier: 10000 // 1
     }
     break
 

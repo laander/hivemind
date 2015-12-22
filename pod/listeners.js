@@ -5,7 +5,8 @@
 export default {
   dead: async function () {
     this._log('listener', 'dead')
-    await this._flush()
-    await this.do('reSeed')
+    // if (this.state !== 'operating') return
+    // this._flush()
+    // await this.do('reSeed')
   }
 }
