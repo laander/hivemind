@@ -31,8 +31,8 @@ export async function seed () {
   this._human = new Human()
   this._humansCount++
   await this._human.do('conceive')
-  //this._setupListeners(this._human)
-  //this._activateAi(this._human)
+  // this._setupListeners(this._human)
+  // this._activateAi(this._human)
   this._reseedOnDead(this._human)
   this.machine.transition('operating')
 }
@@ -58,6 +58,6 @@ export async function cryoRevive () {
   if (!this.inCryo) throw new PodError('No human in bank')
   this._human = this._cryoBank.pop()
   await this._human.do('revive')
-  //this._setupListeners(this._human)
+  // this._setupListeners(this._human)
   this.machine.transition('operating')
 }

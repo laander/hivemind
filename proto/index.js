@@ -81,7 +81,7 @@ class Proto {
       Object.keys(settings.states[state]).forEach(func => {
         newStates[state][func] = settings.states[state][func].bind(this)
       })
-      //newStates[state]._onExit = () => { this._log('exiting', this.state) }
+      // newStates[state]._onExit = () => { this._log('exiting', this.state) }
     })
     let machineSettings = {
       namespace: 'machine',

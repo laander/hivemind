@@ -7,7 +7,7 @@ import Human from '../human'
 import * as states from './states'
 import * as actions from './actions'
 import * as defaults from './defaults'
-import listeners from './listeners'
+// import listeners from './listeners'
 import { PodError } from './utils'
 
 class Pod extends Proto {
@@ -16,9 +16,9 @@ class Pod extends Proto {
     super() // { listeners: listeners }
     this._cryoBank = []
     this._human
-    //this._listeners = listeners
+    // this._listeners = listeners
     this._humansCount = 0
-    //this._observers = []
+    // this._observers = []
     if (!blueprint) this._generateProperties()
     if (blueprint) this.importProperties(blueprint)
   }
@@ -54,14 +54,14 @@ class Pod extends Proto {
   _flush () {
     this._log('action', 'flush')
     if (!this.isMounted) throw new PodError('Human not mounted')
-    //this._destroyListeners(this._human)
+    // this._destroyListeners(this._human)
     delete this._human
   }
 
   async _terminate () {
     this._log('action', 'terminate')
     if (!this.isMounted) throw new PodError('Human not mounted')
-    //this._destroyListeners(this._human)
+    // this._destroyListeners(this._human)
     await this._human.do('die')
     this._flush()
   }

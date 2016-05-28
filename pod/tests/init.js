@@ -3,7 +3,7 @@
  */
 
 import Pod from '../index'
-import Human from '../../human'
+// import Human from '../../human'
 import * as defaults from '../defaults'
 
 describe('Pod: init', function () {
