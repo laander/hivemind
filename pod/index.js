@@ -20,7 +20,7 @@ class Pod extends Proto {
     this._humansCount = 0
     // this._observers = []
     if (!blueprint) this._generateProperties()
-    if (blueprint) this.importProperties(blueprint)
+    else this.importProperties(blueprint)
   }
 
   // vars

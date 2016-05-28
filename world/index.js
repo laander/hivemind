@@ -4,6 +4,8 @@
 
 import Sentient from '../sentient'
 import Cluster from '../cluster'
+import Pod from '../pod'
+import Human from '../human'
 
 class World {
 
@@ -11,6 +13,11 @@ class World {
     this.ai = new Sentient()
     this.ai.train()
     this.cluster = new Cluster()
+    this.entities = [
+      Cluster,
+      Pod,
+      Human
+    ]
   }
 
 }

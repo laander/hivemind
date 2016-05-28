@@ -15,11 +15,18 @@ vantage
 
 vantage
   .command('do')
-  .description('Generate more pods')
+  .description('Run an action')
   .option('-a, --action <name>', 'Name of action')
   .action(function (args, callback) {
     if (!args.options.action) { callback(); return }
     orchestrator.clusterDo(args.options.action).then(callback).catch(e => { console.log('Err!', e); callback() })
+  })
+
+vantage
+  .command('schemas')
+  .description('Get schemas of all entities')
+  .action(function (args, callback) {
+    orchestrator.schemas().then(callback).catch(e => { console.log('Err!', e); callback() })
   })
 
 vantage

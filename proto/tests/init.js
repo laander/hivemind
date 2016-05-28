@@ -56,4 +56,14 @@ describe('Proto: init', function () {
       done()
     } catch (e) { fail(e) }
   })
+  it('must expose machine schema (states and transitions)', async function (done) {
+    try {
+      let entity = new Entity()
+      expect(entity.schema).toBeDefined()
+      expect(Object.keys(entity.schema).length).toBe(3)
+      expect(Object.keys(entity.schema)).toEqual(Object.keys(entity.machine.states))
+      expect(entity.schema.initialized[0]).toBe(Object.keys(entity.machine.states.initialized)[1])
+      done()
+    } catch (e) { fail(e) }
+  })
 })

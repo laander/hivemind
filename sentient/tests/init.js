@@ -15,7 +15,7 @@ describe('Sentient: init', function () {
       // expect(Math.max(...decideResult)).toEqual(decideResult[1])
       // expect(decideResult[1]).toBeGreaterThan(0.9)
       expect(decideResult).toEqual('eat')
-      console.log(decideResult)
+      // console.log(decideResult)
       done()
     } catch (e) { fail(e) }
   })

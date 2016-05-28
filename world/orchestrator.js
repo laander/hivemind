@@ -17,6 +17,15 @@ export async function start (amount = 3) {
   _loop()
 }
 
+export async function schemas () {
+  let schemas = {}
+  world.entities.map(Entity => {
+    let instance = new Entity()
+    schemas[instance.constructor.name] = instance.schema
+  })
+  console.log(schemas)
+}
+
 export async function clusterDo (action) {
   await cluster.do(action)
   _loop()

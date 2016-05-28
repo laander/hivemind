@@ -15,7 +15,7 @@ class Cluster extends Proto {
     super()
     this._pods = []
     if (!blueprint) this._generateProperties()
-    if (blueprint) this.importProperties(blueprint)
+    else this.importProperties(blueprint)
   }
 
   // vars

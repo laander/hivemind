@@ -18,6 +18,16 @@ class Proto {
     return this.machine.state
   }
 
+  get schema () {
+    let result = {}
+    let states = this.machine.states
+    Object.keys(states).map(state => {
+      let actions = Object.keys(states[state]).filter(action => action !== '_onEnter')
+      result[state] = actions
+    })
+    return result
+  }
+
   do (doAction, args) {
     let result = this.machine.handle(doAction, args)
     if (!result) throw new Error('Cant perform action "' + doAction + '", handle not found in current state "' + this.state + '"')
@@ -62,6 +72,10 @@ class Proto {
     return JSON.stringify(this.properties)
   }
 
+  observe (event = 'transition') {
+    return Kefir.fromEvents(this.machine, event)
+  }
+
   _log (...data) {
     // if (this.constructor.name === 'Human') return
     if (!constants.log) return
@@ -104,10 +118,6 @@ class Proto {
 
   _destroyListeners (child) {
     this._listenerInstances[child].off()
-  }
-
-  observe (event = 'transition') {
-    return Kefir.fromEvents(this.machine, event)
   }
 
 }

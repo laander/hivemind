@@ -16,7 +16,7 @@ class Human extends Proto {
   constructor (dna) {
     super()
     if (!dna) this._generateProperties()
-    if (dna) this.importProperties(dna)
+    else this.importProperties(dna)
     this._ai = World().ai
     this._aiActive = true
   }
