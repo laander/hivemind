@@ -6,4 +6,5 @@ process.env.NODE_ENV = 'DEV'
 
 require('babel-register')
 require('babel-polyfill')
-require('./world/commander')
+// require('./instructor/build/dev-server')
+require('./world')

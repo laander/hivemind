@@ -17,8 +17,14 @@ class Human extends Proto {
     super()
     if (!dna) this._generateProperties()
     else this.importProperties(dna)
-    this._ai = World().ai
+    this._ai = World.ai
     this._aiActive = true
+  }
+
+  expose () {
+    return {
+      properties: this.properties
+    }
   }
 
   // lifecycle loops

@@ -47,6 +47,14 @@ class Pod extends Proto {
 
   // methods
 
+  expose () {
+    return {
+      properties: this.properties,
+      cryoBank: this._cryoBank,
+      human: this._human.expose()
+    }
+  }
+
   _generateProperties () {
     this.properties = defaults.generate()
   }

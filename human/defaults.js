@@ -8,7 +8,7 @@ import moment from 'moment'
 var rand = new Chance()
 
 function guid () {
-  return rand.guid()
+  return rand.hash({length: 10})
 }
 
 function name () {

@@ -4,8 +4,8 @@
 
 import constants from '../world/constants'
 import machina from 'machina'
-import moment from 'moment'
 import Kefir from 'kefir'
+import * as logger from '../world/logger'
 
 class Proto {
 
@@ -77,9 +77,8 @@ class Proto {
   }
 
   _log (...data) {
-    // if (this.constructor.name === 'Human') return
-    if (!constants.log) return
-    console.log(moment().format('hh:mm:ss'), '|', this.constructor.name, '=>', ...data)
+    if (this.constructor.name === 'Human') return
+    logger.log(this, ...data)
   }
 
   _sleep (time) {

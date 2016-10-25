@@ -28,11 +28,18 @@ class Cluster extends Proto {
     throw new ClusterError('Not allowed to set pod directly')
   }
 
+  // methods
+
+  expose () {
+    return {
+      properties: this.properties,
+      pods: this._pods.map(pod => pod.expose())
+    }
+  }
+
   _generateProperties () {
     this.properties = defaults.generate()
   }
-
-  // methods
 
   async _constructPod () {
     this._log('action', 'constructPod')

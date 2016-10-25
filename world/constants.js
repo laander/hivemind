@@ -7,7 +7,7 @@ var constants = {}
 switch (process.env.NODE_ENV) {
   case 'DEV':
 
-    constants.log = false
+    constants.consoleLog = true
     constants.time = {
       cycle: 10 // 100
     }
@@ -28,7 +28,7 @@ switch (process.env.NODE_ENV) {
 
   case 'TEST':
 
-    constants.log = false
+    constants.consoleLog = false
     constants.time = {
       cycle: 1 // 100
     }

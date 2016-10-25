@@ -13,10 +13,12 @@
     "babel-preset-stage-3": "^6.3.13",
     "chance": "^0.8.0",
     "decorator-promise": "^1.0.0",
+    "express": "^4.13.4",
     "kefir": "^3.2.0",
     "lodash": "^3.10.1",
     "machina": "^1.1.2",
     "moment": "^2.10.6",
+    "socket.io": "^1.4.6",
     "synaptic": "^1.0.2",
     "vantage": "^1.5.1"
   },

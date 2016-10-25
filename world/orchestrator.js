@@ -2,59 +2,69 @@
  * Orchestrator
  */
 
-import World from './index'
+import world from './index'
+import Cluster from '../cluster'
 import moment from 'moment'
+import * as logger from './logger'
 
 let loopInterval
 
-var world = new World()
-var cluster = world.cluster
+export function init () {
+  logger.log('Orchestrator', 'loaded')
+}
 
 export async function start (amount = 3) {
-  await cluster.do('assemble')
-  await cluster.do('powerOn')
-  await cluster.do('generatePods', amount)
+  world.cluster = new Cluster()
+  await world.cluster.do('assemble')
+  await world.cluster.do('powerOn')
+  await world.cluster.do('generatePods', amount)
   _loop()
 }
 
 export async function schemas () {
   let schemas = {}
-  world.entities.map(Entity => {
-    let instance = new Entity()
+  Object.keys(world.entities).map(entity => {
+    let instance = new world.entities[entity]()
     schemas[instance.constructor.name] = instance.schema
   })
-  console.log(schemas)
+  logger.log('Orchestrator', 'schemas', schemas)
+}
+
+export function expose () {
+  let result = world.cluster.expose()
+  logger.log('Orchestrator', 'Expose', result)
+  return result
 }
 
 export async function clusterDo (action) {
-  await cluster.do(action)
+  await world.cluster.do(action)
   _loop()
 }
 
 export async function generatePods (amount = 3) {
-  await cluster.do('generatePods', amount)
+  await world.cluster.do('generatePods', amount)
   _loop()
 }
 
 export async function powerOutage () {
-  await cluster.do('powerOff')
+  await world.cluster.do('powerOff')
   _loop()
 }
 
 export async function powerRecover () {
-  await cluster.do('powerOn')
-  await cluster.do('activatePods')
-  await cluster.do('seedPods')
+  await world.cluster.do('powerOn')
+  await world.cluster.do('activatePods')
+  await world.cluster.do('seedPods')
   _loop()
 }
 
 export async function freeze () {
-  await cluster.do('cryoFreezePods')
+  await world.cluster.do('cryoFreezePods')
   _loop()
 }
 
 export async function revive () {
-  await cluster.do('cryoRevivePods')
+  await world.cluster.do('cryoRevivePods')
   _loop()
 }
 
@@ -71,11 +81,11 @@ function _loop () {
   console.log(
     moment().format('hh:mm:ss'),
     'Cluster:',
-    cluster.state,
-    '[' + cluster.pods.length + ']'
+    world.cluster.state,
+    '[' + world.cluster.pods.length + ']'
   )
-  if (cluster.pods.length < 1) return
-  cluster.pods.forEach(pod => {
+  if (world.cluster.pods.length < 1) return
+  world.cluster.pods.forEach(pod => {
     if (pod.isMounted) _out(pod, pod.human)
     if (pod.inCryo) _out(pod, pod.cryoBank[0])
   })

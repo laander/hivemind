@@ -4,7 +4,13 @@
 
 import Vantage from 'vantage'
 import * as orchestrator from './orchestrator'
-var vantage = Vantage()
+import * as logger from './logger'
+
+let vantage = Vantage()
+
+export function init () {
+  logger.log('Commander', 'loaded')
+}
 
 vantage
   .command('start')
@@ -27,6 +33,13 @@ vantage
   .description('Get schemas of all entities')
   .action(function (args, callback) {
     orchestrator.schemas().then(callback).catch(e => { console.log('Err!', e); callback() })
+  })
+
+vantage
+  .command('expose')
+  .description('Expose entities')
+  .action(function (args, callback) {
+    orchestrator.expose().then(callback).catch(e => { console.log('Err!', e); callback() })
   })
 
 vantage
@@ -84,5 +97,5 @@ vantage
 vantage
   .delimiter('hivemind$')
   .banner('############# Hivemind ##############')
-  .listen(8889)
+  .listen(8088)
   .show()
